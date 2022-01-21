@@ -1,0 +1,57 @@
+[
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/main.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/main.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/main.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/Interpreter.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/Interpreter.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/Interpreter.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/Value.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/Value.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/Value.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/Div.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/Div.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/Div.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/Variable.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/Variable.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/Variable.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/Plus.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/Plus.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/Plus.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/Minus.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/Minus.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/Minus.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/Mul.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/Mul.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/Mul.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/UMinus.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/UMinus.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/UMinus.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/UPlus.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/UPlus.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/UPlus.cpp"
+},
+{
+  "directory": "/home/yaki/Projects/Inbar/Ex1/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -o CMakeFiles/Ex1.dir/src/UnariOperator.cpp.o -c /home/yaki/Projects/Inbar/Ex1/src/UnariOperator.cpp",
+  "file": "/home/yaki/Projects/Inbar/Ex1/src/UnariOperator.cpp"
+}
+]
