@@ -3,7 +3,7 @@ project(Ex1 VERSION 0.1.0)
 
 include(CTest)
 enable_testing()
-
+  
 add_executable(Ex1 
 src/main.cpp 
 src/Interpreter.cpp 
