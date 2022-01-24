@@ -21,6 +21,8 @@ public:
 	virtual double calculate();
 	void set(double dblValue) {value = dblValue;}
 	void set(std::string strValue) {set(std::stod(strValue));}
+	const std::string& getName() const { return name;}
+	double getValue() {return value;}
 
 	static bool ValidateVarName(std::string& strVarName);
 

@@ -17,6 +17,8 @@ class Variable;
 class Expression;
 typedef std::map<std::string, Variable*> tMapStrVariable;
 typedef std::map<std::string, Variable*>::iterator tMapStrVariableIter;
+std::ostream& operator<<(std::ostream& os, const tMapStrVariable& obj);
+
 class Interpreter {
 	enum Tokens{
 		eMINUS = '-',

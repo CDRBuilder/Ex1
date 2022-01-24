@@ -6,10 +6,18 @@
  */
 
 #include <iostream>
+#include <ostream>
 #include <stdexcept>
 
 #include "../inc/ex1.h"
-
+std::ostream& operator<<(std::ostream& os, const tMapStrVariable& obj)
+{
+	os << "tMapStrVariable =";
+	for (tMapStrVariable::const_iterator i = obj.begin(); i != obj.end(); i++) {
+		os << "{"<<i->first<<"}->("<<i->second->getName()<<","<<i->second->getValue()<<")\t";
+	}
+	return os;
+}
 Interpreter::Interpreter() {
 	m_Vars.clear();
 
@@ -27,7 +35,7 @@ Interpreter::~Interpreter() {
 
 void Interpreter::setVariables(std::string strVars)
 {
-	std::cout<<strVars<<std::endl;
+	DBGVAR(std::cout, strVars)<<ENDL;
 	size_t indexVarBegin = 0;
 	size_t indexEQ = 0;
 	size_t indexColon  = 0;
@@ -44,19 +52,23 @@ void Interpreter::setVariables(std::string strVars)
 			// '=' was found
 			std::string strVarDef = strVars.substr(indexVarBegin, indexEQ- indexVarBegin);
 			std::string strVarVal = strVars.substr(indexEQ+1, indexColon-indexEQ);
-			std::cout<<__FILE__<<"::"<<__FUNCTION__<<"::"<<__LINE__<<"\t"<<strVarDef<<" = "<<strVarVal<<std::endl;
+			DBGVAR_2(std::cout, strVarDef, strVarVal)<<ENDL;
 			std::cout<<"-----------"<<std::endl;
 
 			if (validateVarName(strVarDef) && validateVarVal(strVarVal)) {
-				tMapStrVariableIter iter = m_Vars.find(strVarDef);
-				if(iter != m_Vars.end()) {
-					//variable exists
-					(*iter).second->set(strVarVal);
-				} else {
-					Variable* v = new Variable(strVarDef, std::stod(strVarVal));
-					std::pair<std::string, Variable*> mapEntry(strVarDef, v);
-					m_Vars.insert(mapEntry);
-				}
+				Variable* v = new Variable(strVarDef, std::stod(strVarVal));
+				std::pair<std::string, Variable*> mapEntry(strVarDef, v);
+				std::pair<tMapStrVariableIter,bool> ret;
+				do {
+					ret = m_Vars.insert(mapEntry);
+					if (not ret.second)
+					{
+						//variable exists
+						Variable *existVar = (ret.first)->second;
+						m_Vars.erase(ret.first);
+						delete existVar;
+					}
+				} while (not ret.second);
 			} else
 				throw "illegal variable assignment!";
 		}
@@ -64,6 +76,8 @@ void Interpreter::setVariables(std::string strVars)
 		setVariables(strVars.substr(0, indexColon));
 		setVariables(strVars.substr(indexColon+1));
 	}
+
+	DBGVAR(std::cout, m_Vars)<<ENDL;
 	
 	//}
 }
@@ -130,6 +144,7 @@ bool Interpreter::_readVariable(std::string& strIn,size_t& index)
 
 void Interpreter::_Shunting_Yard(std::string strIn)
 {
+	DBGVAR(std::cout, strIn)<<ENDL;
 	for (size_t index = 0; index < strIn.length();) {
 
 		char tok = strIn.at(index);
@@ -233,7 +248,7 @@ void Interpreter::_handleOperator(char oper)
 
 Expression* Interpreter::interpret(std::string strIn)
 {
-	std::cout<<__FUNCTION__<<" "<<strIn<<std::endl;
+	DBGSTR(std::cout)<<strIn<<ENDL;
 	_Shunting_Yard(strIn);
 
 	return _processQueue();
@@ -245,13 +260,13 @@ Expression* Interpreter::_processQueue()
 	std::stack<Expression*> qOperands;
 	while (!m_outputQ.empty()) {
 		std::string strOperand = m_outputQ.front();
-		std::cout<<__FUNCTION__<<" Line: "<<__LINE__<<" strOperand = "<<strOperand<<std::endl;
+		DBGSTR(std::cout)<<" strOperand = "<<strOperand<<std::endl;
 		bool bBinaryOperator = false;
 		if (isOperator(strOperand, bBinaryOperator)) {
 			Expression* pLeft = nullptr;;
 			Expression* pRight = nullptr;
 			if (bBinaryOperator) {
-				std::cout<<__FUNCTION__<<" Line: "<<__LINE__<<"qOperand has "<<qOperands.size()<<" elements"<<std::endl;
+				DBGSTR(std::cout)<<"qOperand has "<<qOperands.size()<<" elements"<<std::endl;
 				pRight = qOperands.top();
 				qOperands.pop();
 			}
@@ -334,7 +349,7 @@ bool Interpreter::isOperator(std::string strOperand, bool& bBinaryOperator)
 
 bool Interpreter::_isNumber(std::string strOperand, double* d)
 {
-	std::cout<<__FUNCTION__<<" Line: "<<__LINE__<<" strOperand = "<<strOperand<<std::endl;
+	DBGVAR(std::cout, strOperand)<<ENDL;
 	bool bRet = true;
 	try {
 		*d = std::stod(strOperand, nullptr);

@@ -8,6 +8,7 @@
 #ifndef EX1_H_
 #define EX1_H_
 
+#include "utils.h"
 
 #include "Value.h"
 #include "UMinus.h"

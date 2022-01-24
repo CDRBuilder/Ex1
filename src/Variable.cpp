@@ -5,6 +5,7 @@
  *      Author: Yaki
  */
 #include <iostream>
+#include "../inc/ex1.h"
 #include "../inc/Variable.h"
 
 
@@ -29,7 +30,7 @@ Variable::Variable(std::string strName, std::string strValue) {
 }
 
 Variable::~Variable() {
-	std::cout<<__FILE__<<"\t"<<__FUNCTION__<<"\t"<<__LINE__<<std::endl;
+	DBGVAR_2(std::cout, name, value)<<ENDL;
 }
 
 Variable& Variable::operator ++()
