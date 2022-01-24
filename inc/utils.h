@@ -1,7 +1,6 @@
 #ifndef _UTILS_H
 #define _UTILS_H_
-//#define DEBUG 1
-#ifdef DEBUG 
+#ifndef NDEBUG 
 #define DBGVAR( os, var ) \
   (os) << "DBG: " << __FILE__ << "::" << __FUNCTION__ <<"(" << __LINE__ << ") \t\t\t"\
        << #var << " = [" << (var) << "]"
