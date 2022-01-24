@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <sstream>
 #include <ostream>
 #include <stdexcept>
 
@@ -33,9 +34,9 @@ Interpreter::~Interpreter() {
 	}
 }
 
-void Interpreter::setVariables(std::string strVars)
+void Interpreter::setVariables(const std::string& strVars)
 {
-	DBGVAR(std::cout, strVars)<<ENDL;
+	DBGVAR_3L(std::cout, strVars, this, m_Vars);
 	size_t indexVarBegin = 0;
 	size_t indexEQ = 0;
 	size_t indexColon  = 0;
@@ -52,10 +53,10 @@ void Interpreter::setVariables(std::string strVars)
 			// '=' was found
 			std::string strVarDef = strVars.substr(indexVarBegin, indexEQ- indexVarBegin);
 			std::string strVarVal = strVars.substr(indexEQ+1, indexColon-indexEQ);
-			DBGVAR_2(std::cout, strVarDef, strVarVal)<<ENDL;
-			std::cout<<"-----------"<<std::endl;
+			DBGVAR_2L(std::cout, strVarDef, strVarVal);
+			DBGSTRL("---------");
 
-			if (validateVarName(strVarDef) && validateVarVal(strVarVal)) {
+			if (_validateVarName(strVarDef) && _validateVarVal(strVarVal)) {
 				Variable* v = new Variable(strVarDef, std::stod(strVarVal));
 				std::pair<std::string, Variable*> mapEntry(strVarDef, v);
 				std::pair<tMapStrVariableIter,bool> ret;
@@ -77,42 +78,70 @@ void Interpreter::setVariables(std::string strVars)
 		setVariables(strVars.substr(indexColon+1));
 	}
 
-	DBGVAR(std::cout, m_Vars)<<ENDL;
+	DBGVARL(std::cout, m_Vars);
 	
 	//}
 }
 
-bool Interpreter::validateVarName(std::string varName)
+bool Interpreter::_validateVarName(const std::string& varName) 
 {
 	bool bRet = true;
+	bool bIsFirst = true;
+	for(auto c : varName){
+		if (_isDigit(c)) {
+			bRet = !bIsFirst;
+		} else {
+			bRet = (c >= 'a' and c <= 'z') or (c >= 'A' and c <='Z') or (c == '_');
+		}
+		if(!bRet){
+			break;
+		}		
+		bIsFirst = false;
+	}
 	return bRet;
 }
 
-bool Interpreter::validateVarVal(std::string varVal)
+bool Interpreter::_validateVarVal(const std::string& varVal)
 {
 	bool bRet = true;
+	bool decPointPresent = false;
+	for (auto c : varVal) {
+		if (not _isDigit(c)) {
+			if (decPointPresent) {
+				bRet = false;
+				break;
+			} else {
+				if ('.' == c) {
+					decPointPresent = true;
+				} else {
+					bRet = false;
+					break;
+				}
+			}			
+		}
+	}
 	return bRet;
 }
 
-void Interpreter::_handleNumber(std::string& strIn, size_t& index)
+void Interpreter::_handleNumber(const std::string& strIn, size_t& index)
 {
 	size_t iNumBegin = index;
 	try {
 		std::string substr = strIn.substr(iNumBegin, strIn.length() - iNumBegin);
-		std::cout<<__FUNCTION__<<" "<<substr<<std::endl;
+		DBGVARL(std::cout,substr);
 		std::stod(substr,&index);
-		std::cout<<__FUNCTION__<<" Line: "<<__LINE__<<" index = "<<index<<std::endl;
+		DBGVARL(std::cout,index);
 		index += iNumBegin;
 	} catch (const std::invalid_argument& ia) {
 		throw "Invalid argument";
 	}
 	std::string tmp = strIn.substr(iNumBegin, index - iNumBegin);
-	std::cout<<__FUNCTION__<<" Line: "<<__LINE__<<" tmp = "<<tmp<<std::endl;
+	DBGVARL(std::cout, tmp);
 	m_outputQ.push(tmp);
-	std::cout<<strIn.substr(iNumBegin, index - iNumBegin)<<std::endl;
+	DBGSTRL(strIn.substr(iNumBegin, index - iNumBegin));
 }
 
-bool Interpreter::_readVariable(std::string& strIn,size_t& index)
+bool Interpreter::_readVariable(const std::string& strIn,size_t& index)
 {
 	bool bRet = true;
 	size_t iStartOfVarName = index;
@@ -128,7 +157,7 @@ bool Interpreter::_readVariable(std::string& strIn,size_t& index)
 				// these are the only tokens that can follow a variable name
 				//construct the variable name
 				std::string strVarName = strIn.substr(iStartOfVarName, index-iStartOfVarName);
-				std::cout<<__FUNCTION__<<" "<<__LINE__<<" Var name: "<<strVarName<<std::endl;
+				DBGVARL(std::cout, strVarName);
 				//verify that the variable is defined
 				if (m_Vars.find(strVarName) != m_Vars.end()) {
 					// put variable in queue
@@ -142,9 +171,9 @@ bool Interpreter::_readVariable(std::string& strIn,size_t& index)
 	return bRet;
 }
 
-void Interpreter::_Shunting_Yard(std::string strIn)
+void Interpreter::_Shunting_Yard(const std::string& strIn)
 {
-	DBGVAR(std::cout, strIn)<<ENDL;
+	DBGVAR_2L(std::cout, strIn,m_Vars);
 	for (size_t index = 0; index < strIn.length();) {
 
 		char tok = strIn.at(index);
@@ -194,6 +223,7 @@ void Interpreter::_Shunting_Yard(std::string strIn)
 	while (!m_OperStck.empty()) {
 		_MoveStackToQueue();
 	}
+	DBGVARL(std::cout,m_Vars);
 }
 
 void Interpreter::_MoveStackToQueue()
@@ -239,16 +269,18 @@ unsigned char Interpreter::_getPrecedence(char oper)
 
 void Interpreter::_handleOperator(char oper)
 {
-	while (!m_OperStck.empty() && (_getPrecedence(m_OperStck.top()) >= _getPrecedence(oper)) && m_OperStck.top() != '(') {
+	while (	!m_OperStck.empty() && 
+			(_getPrecedence(m_OperStck.top()) >= _getPrecedence(oper)) && 
+			m_OperStck.top() != '(') {
 		_MoveStackToQueue();
 	}
 	m_OperStck.push(oper);
 
 }
 
-Expression* Interpreter::interpret(std::string strIn)
+Expression* Interpreter::interpret(const std::string& strIn)
 {
-	DBGSTR(std::cout)<<strIn<<ENDL;
+	DBGVAR_2L(std::cout,strIn,m_Vars);
 	_Shunting_Yard(strIn);
 
 	return _processQueue();
@@ -260,13 +292,13 @@ Expression* Interpreter::_processQueue()
 	std::stack<Expression*> qOperands;
 	while (!m_outputQ.empty()) {
 		std::string strOperand = m_outputQ.front();
-		DBGSTR(std::cout)<<" strOperand = "<<strOperand<<std::endl;
+		DBGVARL(std::cout, strOperand);
 		bool bBinaryOperator = false;
-		if (isOperator(strOperand, bBinaryOperator)) {
+		if (_isOperator(strOperand, bBinaryOperator)) {
 			Expression* pLeft = nullptr;;
 			Expression* pRight = nullptr;
 			if (bBinaryOperator) {
-				DBGSTR(std::cout)<<"qOperand has "<<qOperands.size()<<" elements"<<std::endl;
+				DBGSTRL("qOperand has "<<qOperands.size()<<" elements");
 				pRight = qOperands.top();
 				qOperands.pop();
 			}
@@ -298,7 +330,7 @@ Expression* Interpreter::_processQueue()
 				default:
 					break;
 			}
-			std::cout<<__FILE__<<" "<<__FUNCTION__<<" "<<__LINE__<<" Expr = "<<expr->calculate()<<std::endl;
+			DBGVARL(std::cout,expr->calculate());
 			if (m_outputQ.size() > 1) {
 				//there are still operands, we expect more operators
 				//output queue still hasn't popped the operator, so its size is at least 1
@@ -324,7 +356,7 @@ Expression* Interpreter::_processQueue()
 	return expr;
 }
 
-bool Interpreter::isOperator(std::string strOperand, bool& bBinaryOperator)
+bool Interpreter::_isOperator(const std::string& strOperand, bool& bBinaryOperator)
 {
 	bool bRet = false;
 	bBinaryOperator = false;
@@ -347,9 +379,9 @@ bool Interpreter::isOperator(std::string strOperand, bool& bBinaryOperator)
 	return bRet;
 }
 
-bool Interpreter::_isNumber(std::string strOperand, double* d)
+bool Interpreter::_isNumber(const std::string& strOperand, double* d)
 {
-	DBGVAR(std::cout, strOperand)<<ENDL;
+	DBGVAR_2L(std::cout, strOperand, *d);
 	bool bRet = true;
 	try {
 		*d = std::stod(strOperand, nullptr);
@@ -358,5 +390,13 @@ bool Interpreter::_isNumber(std::string strOperand, double* d)
 	}
 	return bRet;
 }
+std::string Interpreter::toString() const 
+{
+	std::stringstream s("");
+	s << "Interpreter = "<<this<<" ["<<m_Vars<<"]"; 
+	return s.str();
+
+}
+
 
 

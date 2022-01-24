@@ -18,17 +18,19 @@ protected:
 public:
 	BinaryOperator(Expression* pExLeft = nullptr, Expression* pExRight = nullptr){
 //		std::cout<<"BinaryOperator()"<<std::endl;
+		if ((nullptr == pExLeft)or(nullptr==pExRight))
+			throw "illegal math expression";
 		left = pExLeft;
 		right = pExRight;
 	}
 	virtual ~BinaryOperator() {
 //		std::cout<<"Plus::~Plus("<<left->calculate()<<","<<right->calculate()<<")"<<std::endl;
 		if (left) {
-			delete left;
+//			delete left;
 			left = nullptr;
 		}
 		if (right) {
-			delete right;
+//			delete right;
 			right=nullptr;
 		}
 	}

@@ -5,17 +5,17 @@
  *      Author: Yaki
  */
 #include <iostream>
+#include "../inc/ex1.h"
 #include "../inc/Plus.h"
 
 
 Plus::Plus(Expression* pExLeft, Expression* pExRight) 	: BinaryOperator(pExLeft, pExRight)
 {
-//	std::cout<<"Plus::Plus("<<left<<","<<right<<")"<<std::endl;
+	DBGVAR_2L(std::cout, left, right);
 }
 
 Plus::~Plus()
-{
-//		std::cout<<"Plus::~Plus("<<left->calculate()<<","<<right->calculate()<<")"<<std::endl;
+{	DBGVAR_2L(std::cout, left->calculate(), right->calculate());
 };
 
 double Plus::calculate()

@@ -94,16 +94,10 @@ void Test4()
     }
 }
 
-int main()
+void Test5()
 {
-    Test1();
-    // Test2();
-    // Test3();
-    // Test4();
-
     // 5
     Interpreter* i2 = new Interpreter();
-    {
     Expression* e5 = nullptr;
     try {
         i2->setVariables("x=2;y=4");
@@ -117,10 +111,11 @@ int main()
         } //deleting i2 in the next example
         std::cout << e << std::endl;
     }
-    }
+// }
 
+// void Test6()
+// {
     // 6
-    {
     Interpreter* i3 = new Interpreter();
     Expression* e6 = nullptr;
     try {
@@ -143,8 +138,10 @@ int main()
         }
         std::cout << e << std::endl;
     }
-    }
 
+}
+
+void Test7()
 {
     Interpreter* i4 = new Interpreter();
     Expression* e7 = nullptr;
@@ -164,11 +161,16 @@ int main()
         }
         std::cout << e << std::endl;
     }
+
 }
-    // 8
-{    Expression* e8 = nullptr;
+
+void Test8()
+{
+ 
+    Expression* e8 = nullptr;
     try {
         e8 = new Div(new Value(1.0), new Value(0.0));// 1.0/0.0
+        double d = e8->calculate();
         std::cout << "8: " << e8->calculate() << std::endl;// error
         delete e8;
     } catch (const char* e) {
@@ -178,8 +180,11 @@ int main()
         std::cout << e << std::endl;
     }
 }
+
+void Test9()
+{
     // 9
-{    Interpreter* i6 = new Interpreter();
+    Interpreter* i6 = new Interpreter();
     Expression* e9 = nullptr;
     try {
         e9 = i6->interpret("1.0-(-(-16.0))");
@@ -196,8 +201,11 @@ int main()
         std::cout << e << std::endl;
     }
 }
+
+void Test10()
+{
     // 10
-{    Interpreter* i7 = new Interpreter();
+    Interpreter* i7 = new Interpreter();
     Expression* e10 = nullptr;
     try {
         i7->setVariables("x=1;y=2;z=3");
@@ -215,7 +223,10 @@ int main()
         std::cout << e << std::endl;
     }
 }
-{    Interpreter* i8 = new Interpreter();
+
+void Test11()
+{
+    Interpreter* i8 = new Interpreter();
     Expression* e11 = nullptr;
     try {
         // 11
@@ -233,7 +244,21 @@ int main()
         }
         std::cout << e << std::endl;
     }
-    }
+}
+int main()
+{
+    Test1();
+    Test2();
+    Test3();
+    Test4();
+    Test5();
+    Test7();
+    Test8();
+    Test9();
+    Test10();
+    Test11();
+
+
         return 0;
 }
 

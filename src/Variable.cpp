@@ -30,7 +30,7 @@ Variable::Variable(std::string strName, std::string strValue) {
 }
 
 Variable::~Variable() {
-	DBGVAR_2(std::cout, name, value)<<ENDL;
+	DBGVAR_2L(std::cout, name, value);
 }
 
 Variable& Variable::operator ++()

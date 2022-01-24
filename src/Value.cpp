@@ -6,18 +6,17 @@
  */
 #include <iostream>
 
-#include "../inc/utils.h"
-#include "../inc/Value.h"
+#include "../inc/ex1.h"
+//#include "../inc/Value.h"
 
 Value::Value(double v) {
 	m_value = new double(v);
-	DBGVAR(std::cout, v)<<ENDL;
+	DBGVARL(std::cout, v);
 }
 
 Value::~Value() {
-	// TODO Auto-generated destructor stub
-	DBGVAR(std::cout, *m_value)<<ENDL;
-	if(m_value) {
+	DBGVARL(std::cout, *m_value);
+		if(m_value) {
 		delete m_value;
 		m_value = nullptr;
 	}
@@ -25,7 +24,7 @@ Value::~Value() {
 
 double Value::calculate()
 {
-//	std::cout<<"Value::calculate()"<<std::endl;
+	DBGVARL(std::cout, *m_value);
 	return (*m_value);
 }
 
